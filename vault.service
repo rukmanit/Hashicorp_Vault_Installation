@@ -1,0 +1,38 @@
+cat <<EOF>/usr/lib/systemd/system/multi-user.target.wants/vault.service
+### BEGIN INIT INFO
+# Provides: vault
+# Required-Start:
+# Required-Stop:
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Vault agent
+# Description: Vault secret management tool
+### END INIT INFO
+[Unit]
+Description="HashiCorp Vault - A tool for managing secrets"
+Documentation=https://www.vaultproject.io/docs/
+Requires=network-online.target
+After=network-online.target
+ConditionFileNotEmpty=/apps/secret/vault.d/vault_main.hcl
+#StartLimitIntervalSec=60
+[Service]
+User=root
+Group=root
+ExecStart=/usr/local/bin/vault server -config=/apps/secret/vault.d/vault_main.hcl -log-level=info
+ExecReload=/bin/kill --signal HUP
+KillMode=process
+KillSignal=SIGINT
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+StartLimitInterval=60
+StartLimitBurst=3
+LimitNOFILE=524288
+LimitNPROC=524288
+LimitMEMLOCK=infinity
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl daemon-reload
+Start the Vault
+systemctl start vault
