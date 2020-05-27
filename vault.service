@@ -8,6 +8,7 @@ cat <<EOF>/usr/lib/systemd/system/multi-user.target.wants/vault.service
 # Short-Description: Vault agent
 # Description: Vault secret management tool
 ### END INIT INFO
+
 [Unit]
 Description="HashiCorp Vault - A tool for managing secrets"
 Documentation=https://www.vaultproject.io/docs/
